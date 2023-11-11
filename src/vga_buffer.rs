@@ -1,5 +1,5 @@
+use crate::tests;
 use core::fmt;
-
 use lazy_static::lazy_static;
 use spin::Mutex;
 use volatile::Volatile;
@@ -144,24 +144,18 @@ pub fn _print(args: fmt::Arguments) {
     WRITER.lock().write_fmt(args).unwrap();
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test_case]
-    fn test_println_simple() {
+tests! {
+    println_simple {
         println!("test_println_simple output");
     }
 
-    #[test_case]
-    fn test_println_many() {
+    println_many {
         for _ in 0..200 {
             println!("test_println_many output");
         }
     }
 
-    #[test_case]
-    fn test_println_output() {
+    println_output {
         let s = "Some test string that fits on a single line";
         println!("{}", s);
         for (i, c) in s.chars().enumerate() {
