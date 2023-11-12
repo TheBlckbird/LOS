@@ -1,16 +1,11 @@
-#![no_main]
 #![no_std]
+#![no_main]
 #![feature(custom_test_frameworks)]
-#![test_runner(test_runner)]
+#![test_runner(os_rust::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-mod exit_qemu;
-mod serial;
-mod vga_buffer;
-
 use core::panic::PanicInfo;
-#[cfg(test)]
-use exit_qemu::{exit_qemu, QemuExitCode};
+use os_rust::{println, tests};
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
@@ -34,14 +29,10 @@ fn panic(info: &PanicInfo) -> ! {
     loop {}
 }
 
-// our panic handler in test mode
 #[cfg(test)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    serial_println!("[failed]\n");
-    serial_println!("Error: {}\n", info);
-    exit_qemu(QemuExitCode::Failed);
-    loop {}
+    os_rust::test_panic_handler(info)
 }
 
 tests! {
@@ -50,40 +41,4 @@ tests! {
         assert_eq!(1, one);
         assert_ne!(1, 4);
     }
-}
-
-#[cfg(test)]
-pub fn test_runner(tests: &[&dyn Fn()]) {
-    let tests_len = tests.len();
-    serial_println!(
-        "Running {} test{}",
-        tests_len,
-        if tests_len == 1 { "" } else { "s" }
-    );
-
-    for test in tests {
-        test();
-    }
-
-    exit_qemu(QemuExitCode::Success);
-}
-
-// test suite helper
-#[macro_export]
-macro_rules! tests {
-    {$($name:ident $body:block)*} => {
-        $(
-            #[cfg(test)]
-            #[test_case]
-            fn $name() {
-                $crate::serial_print!("test ");
-                for word in stringify!($name).split('_') {
-                    $crate::serial_print!("{} ", word);
-                }
-                $crate::serial_print!("\t");
-                $body
-                $crate::serial_println!("[ok]");
-            }
-        )*
-    };
 }
