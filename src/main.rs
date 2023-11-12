@@ -6,6 +6,7 @@
 
 use core::panic::PanicInfo;
 use os_rust::{println, tests};
+// use test_macros::test;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
@@ -20,6 +21,11 @@ pub extern "C" fn _start() -> ! {
     #[allow(clippy::empty_loop)]
     loop {}
 }
+
+// #[test]
+// fn my_test_test() {
+//     println!("my_test_test");
+// }
 
 /// This function is called on panic.
 #[cfg(not(test))]

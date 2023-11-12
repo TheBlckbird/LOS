@@ -4,10 +4,10 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-use core::panic::PanicInfo;
-
-pub mod serial;
 pub mod vga_buffer;
+
+use core::panic::PanicInfo;
+use serial::serial_println;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u32)]
@@ -80,13 +80,13 @@ macro_rules! tests {
             #[cfg(test)]
             #[test_case]
             fn $name() {
-                $crate::serial_print!("test ");
+                serial::serial_print!("test ");
                 for word in stringify!($name).split('_') {
-                    $crate::serial_print!("{} ", word);
+                    serial::serial_print!("{} ", word);
                 }
-                $crate::serial_print!("\t");
+                serial::serial_print!("\t");
                 $body
-                $crate::serial_println!("[ok]");
+                serial::serial_println!("[ok]");
             }
         )*
     };

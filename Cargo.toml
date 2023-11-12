@@ -32,8 +32,11 @@ bootloader = "0.9.8"
 volatile = "0.2.6"
 spin = "0.9.8"
 x86_64 = "0.14.2"
-uart_16550 = "0.2.0"
+serial = { path = "./crates/serial" }
 
 [dependencies.lazy_static]
 version = "1.0"
 features = ["spin_no_std"]
+
+[workspace]
+members = ["crates/*", "."]
