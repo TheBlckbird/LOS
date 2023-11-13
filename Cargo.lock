@@ -59,6 +59,7 @@ dependencies = [
  "lazy_static",
  "serial",
  "spin 0.9.8",
+ "test_macros",
  "volatile 0.2.7",
  "x86_64",
 ]
