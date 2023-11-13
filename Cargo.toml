@@ -33,6 +33,7 @@ volatile = "0.2.6"
 spin = "0.9.8"
 x86_64 = "0.14.2"
 serial = { path = "./crates/serial" }
+test_macros = { path = "./crates/test_macros" }
 
 [dependencies.lazy_static]
 version = "1.0"

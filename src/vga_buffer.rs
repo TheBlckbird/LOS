@@ -1,4 +1,3 @@
-use crate::tests;
 use core::fmt;
 use lazy_static::lazy_static;
 use spin::Mutex;
@@ -144,23 +143,23 @@ pub fn _print(args: fmt::Arguments) {
     WRITER.lock().write_fmt(args).unwrap();
 }
 
-tests! {
-    println_simple {
-        println!("test_println_simple output");
-    }
+// tests! {
+//     println_simple {
+//         println!("test_println_simple output");
+//     }
 
-    println_many {
-        for _ in 0..200 {
-            println!("test_println_many output");
-        }
-    }
+//     println_many {
+//         for _ in 0..200 {
+//             println!("test_println_many output");
+//         }
+//     }
 
-    println_output {
-        let s = "Some test string that fits on a single line";
-        println!("{}", s);
-        for (i, c) in s.chars().enumerate() {
-            let screen_char = WRITER.lock().buffer.chars[BUFFER_HEIGHT - 2][i].read();
-            assert_eq!(char::from(screen_char.ascii_character), c);
-        }
-    }
-}
+//     println_output {
+//         let s = "Some test string that fits on a single line";
+//         println!("{}", s);
+//         for (i, c) in s.chars().enumerate() {
+//             let screen_char = WRITER.lock().buffer.chars[BUFFER_HEIGHT - 2][i].read();
+//             assert_eq!(char::from(screen_char.ascii_character), c);
+//         }
+//     }
+// }

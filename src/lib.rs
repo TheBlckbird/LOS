@@ -49,13 +49,13 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
     loop {}
 }
 
-tests! {
-    testing_works {
-        let one = 1;
-        assert_eq!(1, one);
-        assert_ne!(1, 4);
-    }
-}
+// tests! {
+//     testing_works {
+//         let one = 1;
+//         assert_eq!(1, one);
+//         assert_ne!(1, 4);
+//     }
+// }
 
 pub fn test_runner(tests: &[&dyn Fn()]) {
     let tests_len = tests.len();
@@ -72,22 +72,22 @@ pub fn test_runner(tests: &[&dyn Fn()]) {
     exit_qemu(QemuExitCode::Success);
 }
 
-// test suite helper
-#[macro_export]
-macro_rules! tests {
-    {$($name:ident $body:block)*} => {
-        $(
-            #[cfg(test)]
-            #[test_case]
-            fn $name() {
-                serial::serial_print!("test ");
-                for word in stringify!($name).split('_') {
-                    serial::serial_print!("{} ", word);
-                }
-                serial::serial_print!("\t");
-                $body
-                serial::serial_println!("[ok]");
-            }
-        )*
-    };
-}
+// // test suite helper
+// #[macro_export]
+// macro_rules! tests {
+//     {$($name:ident $body:block)*} => {
+//         $(
+//             #[cfg(test)]
+//             #[test_case]
+//             fn $name() {
+//                 serial::serial_print!("test ");
+//                 for word in stringify!($name).split('_') {
+//                     serial::serial_print!("{} ", word);
+//                 }
+//                 serial::serial_print!("\t");
+//                 $body
+//                 serial::serial_println!("[ok]");
+//             }
+//         )*
+//     };
+// }

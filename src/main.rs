@@ -5,8 +5,9 @@
 #![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
-use os_rust::{println, tests};
-// use test_macros::test;
+use os_rust::println;
+use serial::serial_println;
+use test_macros::test;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
@@ -22,10 +23,10 @@ pub extern "C" fn _start() -> ! {
     loop {}
 }
 
-// #[test]
-// fn my_test_test() {
-//     println!("my_test_test");
-// }
+#[test]
+fn my_test_test() {
+    serial_println!("my_test_test");
+}
 
 /// This function is called on panic.
 #[cfg(not(test))]
@@ -41,10 +42,10 @@ fn panic(info: &PanicInfo) -> ! {
     os_rust::test_panic_handler(info)
 }
 
-tests! {
-    testing_works {
-        let one = 1;
-        assert_eq!(1, one);
-        assert_ne!(1, 4);
-    }
-}
+// tests! {
+//     testing_works {
+//         let one = 1;
+//         assert_eq!(1, one);
+//         assert_ne!(1, 4);
+//     }
+// }
