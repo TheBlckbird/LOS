@@ -40,3 +40,7 @@ features = ["spin_no_std"]
 
 [workspace]
 members = ["crates/*", "."]
+
+[[test]]
+name = "should_panic"
+harness = false
