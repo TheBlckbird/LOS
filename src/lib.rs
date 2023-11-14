@@ -81,10 +81,17 @@ macro_rules! tests {
             #[test_case]
             fn $name() {
                 serial::serial_print!("test ");
-                for word in stringify!($name).split('_') {
-                    serial::serial_print!("{} ", word);
+
+                let mut it = stringify!($name).split(' ').peekable();
+
+                while let Some(word) = it.next()  {
+                    serial::serial_print!("{}", word);
+
+                    if !it.peek().is_none() {
+                        serial::serial_print!(" ");
+                    }
                 }
-                serial::serial_print!("\t");
+                serial::serial_print!("...\t");
                 $body
                 serial::serial_println!("[ok]");
             }
