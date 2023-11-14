@@ -9,13 +9,19 @@ use os_rust::{println, tests};
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
+    os_rust::init();
+
     println!("Hello World{}", "!");
     println!("Hello World{}", "!");
     println!("some numbers: {} {}", 42, 1.337);
     println!("Louis");
 
+    x86_64::instructions::interrupts::int3();
+
     #[cfg(test)]
     test_main();
+
+    println!("it did not crash");
 
     #[allow(clippy::empty_loop)]
     loop {}

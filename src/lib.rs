@@ -1,13 +1,19 @@
 #![no_std]
 #![cfg_attr(test, no_main)]
-#![feature(custom_test_frameworks)]
+#![feature(custom_test_frameworks, abi_x86_interrupt)]
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+pub mod interrupts;
 pub mod vga_buffer;
 
 use core::panic::PanicInfo;
 use serial::serial_println;
+
+/// This function is run on startup regardless of whether it’s in testing mode or not
+pub fn init() {
+    interrupts::init_idt();
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u32)]
@@ -28,6 +34,7 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
 #[cfg(test)]
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
+    init();
     test_main();
 
     #[allow(clippy::empty_loop)]
@@ -81,10 +88,17 @@ macro_rules! tests {
             #[test_case]
             fn $name() {
                 serial::serial_print!("test ");
-                for word in stringify!($name).split('_') {
-                    serial::serial_print!("{} ", word);
+
+                let mut it = stringify!($name).split(' ').peekable();
+
+                while let Some(word) = it.next()  {
+                    serial::serial_print!("{}", word);
+
+                    if !it.peek().is_none() {
+                        serial::serial_print!(" ");
+                    }
                 }
-                serial::serial_print!("\t");
+                serial::serial_print!("...\t");
                 $body
                 serial::serial_println!("[ok]");
             }
