@@ -4,6 +4,7 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+pub mod gdt;
 pub mod interrupts;
 pub mod vga_buffer;
 
@@ -12,6 +13,7 @@ use serial::serial_println;
 
 /// This function is run on startup regardless of whether it’s in testing mode or not
 pub fn init() {
+    gdt::init();
     interrupts::init_idt();
 }
 

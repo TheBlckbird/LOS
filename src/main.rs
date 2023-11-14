@@ -16,12 +16,8 @@ pub extern "C" fn _start() -> ! {
     println!("some numbers: {} {}", 42, 1.337);
     println!("Louis");
 
-    x86_64::instructions::interrupts::int3();
-
     #[cfg(test)]
     test_main();
-
-    println!("it did not crash");
 
     #[allow(clippy::empty_loop)]
     loop {}
