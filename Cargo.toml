@@ -34,6 +34,7 @@ spin = "0.9.8"
 x86_64 = { workspace = true }
 serial = { path = "./crates/serial" }
 pic8259 = "0.10.4"
+pc-keyboard = "0.5.0"
 
 [dependencies.lazy_static]
 version = "1.0"
