@@ -15,6 +15,14 @@ use serial::serial_println;
 pub fn init() {
     gdt::init();
     interrupts::init_idt();
+    unsafe { interrupts::PICS.lock().initialize() };
+    x86_64::instructions::interrupts::enable();
+}
+
+pub fn htl_loop() -> ! {
+    loop {
+        x86_64::instructions::hlt();
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -39,8 +47,7 @@ pub extern "C" fn _start() -> ! {
     init();
     test_main();
 
-    #[allow(clippy::empty_loop)]
-    loop {}
+    htl_loop();
 }
 
 #[cfg(test)]
@@ -54,8 +61,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
     serial_println!("Error: {}\n", info);
     exit_qemu(QemuExitCode::Failed);
 
-    #[allow(clippy::empty_loop)]
-    loop {}
+    htl_loop();
 }
 
 tests! {
@@ -91,7 +97,7 @@ macro_rules! tests {
             fn $name() {
                 serial::serial_print!("test ");
 
-                let mut it = stringify!($name).split(' ').peekable();
+                let mut it = stringify!($name).split('_').peekable();
 
                 while let Some(word) = it.next()  {
                     serial::serial_print!("{}", word);
